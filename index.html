@@ -67,7 +67,7 @@
         <button onclick="createProfile()">Create</button>
     </div>
 
-    <!-- Background Music -->
+    <!-- Background Music (Plays AFTER intro video finishes) -->
     <audio id="bgMusic" loop>
         <source src="3 O'CLOCK PRAYER - PANALANGIN SA IKA-3 NG HAPON.mp3" type="audio/mp3">
         Your browser does not support the audio element.
@@ -75,7 +75,7 @@
 
     <!-- Background video for user's profile -->
     <video id="userVideo" autoplay loop class="video-bg">
-        <source id="userVideoSource" src="" type="video/mp4">
+        <source id="userVideoSource" src="your_user_video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
@@ -85,31 +85,28 @@
             const splashScreen = document.getElementById("splashScreen");
             const mainContent = document.getElementById("mainContent");
             const bgMusic = document.getElementById("bgMusic");
-            const userVideo = document.getElementById("userVideo");
-            const userVideoSource = document.getElementById("userVideoSource");
 
-            // Play audio and video with sound after user interaction
-            function enableAudio() {
-                introVideo.play();
-                bgMusic.play();
-                document.body.removeEventListener("click", enableAudio);
-            }
+            // Play the intro video with sound
+            introVideo.muted = false;
+            introVideo.play().catch(error => {
+                console.log("Autoplay blocked. Waiting for user interaction.");
+                document.body.addEventListener("click", () => {
+                    introVideo.play();
+                }, { once: true });
+            });
 
-            document.body.addEventListener("click", enableAudio);
-
-            // Hide splash screen after video ends
+            // After the intro video ends
             introVideo.onended = function () {
                 splashScreen.style.display = "none";
                 mainContent.style.display = "block";
 
-                // Play background music after intro video
-                bgMusic.play();
-
-                // Set background video for the user
-                const userVideoPath = "your_user_video.mp4"; // Replace with actual video path
-                userVideoSource.src = userVideoPath;
-                userVideo.load();
-                userVideo.play();
+                // Play background music
+                bgMusic.play().catch(error => {
+                    console.log("Autoplay blocked for music. Waiting for user interaction.");
+                    document.body.addEventListener("click", () => {
+                        bgMusic.play();
+                    }, { once: true });
+                });
             };
         });
     </script>
