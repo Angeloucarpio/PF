@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Feed</title>
-
     <style>
-      /* General Styles */
       /* General Styles */
       body {
         font-family: "Poppins", sans-serif;
@@ -203,7 +201,7 @@
 
     <div class="tweet-box">
       <textarea id="tweetInput" placeholder="What's on your mind?"></textarea>
-      <button onclick="postTweet()">Post</button>
+      <button id="postButton" onclick="postTweet()">Post</button>
     </div>
     <audio id="bgMusic" loop>
       <source
@@ -246,6 +244,13 @@
         if (backgroundImage) {
           document.getElementById("backgroundImage").src = backgroundImage;
         }
+
+        // Start background music after user interaction
+        document.body.addEventListener("click", function () {
+          const bgMusic = document.getElementById("bgMusic");
+          bgMusic.muted = false;
+          bgMusic.play();
+        });
       };
 
       // Function to post a tweet
@@ -254,13 +259,17 @@
         if (tweetText) {
           let tweetDiv = document.createElement("div");
           tweetDiv.classList.add("tweet");
-          tweetDiv.innerHTML = `
+          tweetDiv.innerHTML = ` 
             <p>${tweetText}</p>
             <button class="like-btn" data-liked="false">❤️</button>
             <span class="like-count">0</span>
           `;
           document.getElementById("tweetFeed").appendChild(tweetDiv);
           document.getElementById("tweetInput").value = ""; // Clear input field after posting
+
+          // Play a sound effect when post button is clicked
+          const postSound = new Audio("click-sound.mp3"); // Provide your own sound effect
+          postSound.play();
         }
       }
 

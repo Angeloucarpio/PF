@@ -91,14 +91,15 @@
       
           // Ensure video is muted initially for autoplay
           introVideo.muted = true;
+          bgMusic.muted = true;
       
           // Play audio and unmute after user interaction
           document.body.addEventListener("click", function () {
-            introVideo.muted = false;  // Unmute after interaction
-            introVideo.play();
+            introVideo.muted = false;  // Unmute video after interaction
+            introVideo.play();         // Play video
       
-            bgMusic.muted = false;
-            bgMusic.play();
+            bgMusic.muted = false;     // Unmute background music after interaction
+            bgMusic.play();            // Play background music
           });
       
           // Hide splash screen after video ends
@@ -107,12 +108,13 @@
             mainContent.style.display = "block";
       
             // Set background video for the user
-            const userVideoPath = "path_to_user_specific_video.mp4";
+            const userVideoPath = "path_to_user_specific_video.mp4"; // Replace with your user video path
             document.getElementById("userVideoSource").src = userVideoPath;
             document.getElementById("userVideo").load();
             document.getElementById("userVideo").play();
           };
         });
-      </script>      
+      </script>
+       
   </body>
 </html>
