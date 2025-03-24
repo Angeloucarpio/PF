@@ -82,74 +82,37 @@
       Your browser does not support the video tag.
     </video>
        <script src="script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const introVideo = document.getElementById("introVideo");
-        const splashScreen = document.getElementById("splashScreen");
-        const mainContent = document.getElementById("mainContent");
-        const bgMusic = document.getElementById("bgMusic");
-
-        // Play audio and unmute after user interaction
-        document.body.addEventListener("click", function () {
-          introVideo.muted = false;
-          introVideo.play();
-
-          bgMusic.muted = false;
-          bgMusic.play();
+       <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const introVideo = document.getElementById("introVideo");
+          const splashScreen = document.getElementById("splashScreen");
+          const mainContent = document.getElementById("mainContent");
+          const bgMusic = document.getElementById("bgMusic");
+      
+          // Ensure video is muted initially for autoplay
+          introVideo.muted = true;
+      
+          // Play audio and unmute after user interaction
+          document.body.addEventListener("click", function () {
+            introVideo.muted = false;  // Unmute after interaction
+            introVideo.play();
+      
+            bgMusic.muted = false;
+            bgMusic.play();
+          });
+      
+          // Hide splash screen after video ends
+          introVideo.onended = function () {
+            splashScreen.style.display = "none";
+            mainContent.style.display = "block";
+      
+            // Set background video for the user
+            const userVideoPath = "path_to_user_specific_video.mp4";
+            document.getElementById("userVideoSource").src = userVideoPath;
+            document.getElementById("userVideo").load();
+            document.getElementById("userVideo").play();
+          };
         });
-
-        // Hide splash screen after video ends
-        introVideo.onended = function () {
-          splashScreen.style.display = "none";
-          mainContent.style.display = "block";
-
-          // Set background video for the user
-          const userVideoPath = "path_to_user_specific_video.mp4";
-          document.getElementById("userVideoSource").src = userVideoPath;
-          document.getElementById("userVideo").load();
-          document.getElementById("userVideo").play();
-        };
-      });
-
-      // Function to create profile
-      function createProfile() {
-        const name = document.getElementById("name").value;
-        const birthday = document.getElementById("birthday").value;
-        const bio = document.getElementById("bio").value;
-        const quote = document.getElementById("quote").value;
-
-        if (name && birthday && bio && quote) {
-          localStorage.setItem("name", name);
-          localStorage.setItem("birthday", birthday);
-          localStorage.setItem("bio", bio);
-          localStorage.setItem("quote", quote);
-
-          // Handle profile and background pictures
-          const profilePic = document.getElementById("profilePic").files[0];
-          const backgroundPic = document.getElementById("backgroundPic").files[0];
-
-          if (profilePic) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              localStorage.setItem("profileImage", e.target.result);
-            };
-            reader.readAsDataURL(profilePic);
-          }
-
-          if (backgroundPic) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              localStorage.setItem("backgroundImage", e.target.result);
-            };
-            reader.readAsDataURL(backgroundPic);
-          }
-
-          alert("Profile created successfully!");
-          window.location.href = "feed.html";
-        } else {
-          alert("Please fill out all fields!");
-        }
-      }
-    </script>
+      </script>      
   </body>
 </html>
