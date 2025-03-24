@@ -62,8 +62,13 @@
         <input type="date" id="birthday" required>
         <textarea id="bio" placeholder="Bio or About Me" required></textarea>
         <input type="text" id="quote" placeholder="Favorite Quote" required>
-        <input type="file" id="profilePic" accept="image/*">
-        <input type="file" id="backgroundPic" accept="image/*">
+        
+        <!-- File Upload Inputs -->
+        <label>Upload Profile Picture:</label>
+        <input type="file" id="profilePic" accept="image/*" required>
+        <label>Upload Background Picture:</label>
+        <input type="file" id="backgroundPic" accept="image/*" required>
+
         <button onclick="createProfile()">Create</button>
     </div>
 
@@ -109,6 +114,30 @@
                 });
             };
         });
+
+        // Function to handle profile creation and redirect after uploading
+        function createProfile() {
+            const name = document.getElementById("name").value.trim();
+            const birthday = document.getElementById("birthday").value;
+            const bio = document.getElementById("bio").value.trim();
+            const quote = document.getElementById("quote").value.trim();
+            const profilePic = document.getElementById("profilePic").files[0];
+            const backgroundPic = document.getElementById("backgroundPic").files[0];
+
+            // Validate if all fields are filled and files are uploaded
+            if (name === "" || birthday === "" || bio === "" || quote === "" || !profilePic || !backgroundPic) {
+                alert("Please fill out all fields and upload both images before proceeding!");
+                return;
+            }
+
+            // Simulating file upload delay (replace with actual upload logic if needed)
+            alert("Uploading files... Please wait.");
+
+            setTimeout(() => {
+                alert("Profile created successfully!");
+                window.location.href = "feed.html"; // Redirect after upload
+            }, 2000); // Simulated delay of 2 seconds
+        }
     </script>
 
 </body>
