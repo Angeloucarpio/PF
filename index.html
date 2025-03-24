@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Your Profile</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Full-screen splash screen */
+      #splashScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      /* Hide splash screen after video finishes */
+      #mainContent {
+        display: none;
+        position: relative;
+      }
+
+      /* Background video */
+      .video-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      /* Ensure body has full height */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <script src="script.js"></script>
+  <body>
+    <!-- Splash Screen with Opening Video -->
+    <div id="splashScreen">
+      <video id="introVideo" autoplay muted>
+        <source src="Pornhub Intro meme.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Main Content (hidden during video) -->
+    <div id="mainContent" class="container">
+      <h1>Create Your Profile</h1>
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="date" id="birthday" required />
+      <textarea id="bio" placeholder="Bio or About Me" required></textarea>
+      <input type="text" id="quote" placeholder="Favorite Quote" required />
+      <input type="file" id="profilePic" accept="image/*" />
+      <input type="file" id="backgroundPic" accept="image/*" />
+      <button onclick="createProfile()">Create</button>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" autoplay loop muted>
+      <source
+        src="3 O'CLOCK PRAYER - PANALANGIN SA IKA-3 NG HAPON.mp3"
+        type="audio/mp3"
+      />
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Background video for user's profile -->
+    <video id="userVideo" autoplay muted loop class="video-bg">
+      <source id="userVideoSource" src="" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <script>
+      // After splash screen ends, show the main content and set user video
+      document.getElementById("introVideo").onended = function () {
+        // Hide splash screen
+        document.getElementById("splashScreen").style.display = "none";
+        // Show main content
+        document.getElementById("mainContent").style.display = "block";
+
+        // Set the background video for the user (this can be dynamic based on user selection)
+        const userVideoPath = "path_to_user_specific_video.mp4"; // Replace with the actual path to the user's background video
+        document.getElementById("userVideoSource").src = userVideoPath;
+        document.getElementById("userVideo").load();
+        document.getElementById("userVideo").play(); // Ensure it plays after load
+      };
+
+      // Function to create profile
+      function createProfile() {
+        const name = document.getElementById("name").value;
+        const birthday = document.getElementById("birthday").value;
+        const bio = document.getElementById("bio").value;
+        const quote = document.getElementById("quote").value;
+
+        if (name && birthday && bio && quote) {
+          // Save profile data to localStorage
+          localStorage.setItem("name", name);
+          localStorage.setItem("birthday", birthday);
+          localStorage.setItem("bio", bio);
+          localStorage.setItem("quote", quote);
+
+          // Handle profile and background pictures
+          const profilePic = document.getElementById("profilePic").files[0];
+          const backgroundPic =
+            document.getElementById("backgroundPic").files[0];
+
+          // Convert images to Base64 and save them
+          if (profilePic) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              localStorage.setItem("profileImage", e.target.result); // Store image as base64
+            };
+            reader.readAsDataURL(profilePic);
+          }
+
+          if (backgroundPic) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              localStorage.setItem("backgroundImage", e.target.result); // Store background image
+            };
+            reader.readAsDataURL(backgroundPic);
+          }
+
+          // Show success alert and redirect to the feed page
+          alert("Profile created successfully!");
+          window.location.href = "feed.html"; // Redirect to feed page
+        } else {
+          alert("Please fill out all fields!");
+        }
+      }
+
+      // Ensure background music plays when the splash screen is hidden
+      const bgMusic = document.getElementById("bgMusic");
+      bgMusic.muted = false; // Unmute the background music after splash screen ends
+    </script>
+  </body>
+</html>

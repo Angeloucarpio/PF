@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Feed</title>
+
+    <style>
+      /* General Styles */
+      /* General Styles */
+      body {
+        font-family: "Poppins", sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        height: 100vh; /* Ensures the body takes up the full viewport height */
+
+        /* Combine the gradient and GIF as background images */
+        background-color: skyblue;
+        height: 100%; /* Ensures the background takes the full height of the page */
+      }
+
+      div#mainContent {
+        margin-left: 98px;
+        margin-top: 211px;
+      }
+      /* Video Background */
+      .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      /* Containers */
+      .container,
+      .profile-container,
+      .tweet-box,
+      .feed {
+        background: white;
+        padding: 20px;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .container:hover,
+      .profile-container:hover,
+      .tweet-box:hover,
+      .feed:hover {
+        transform: scale(1.02);
+      }
+
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 3px solid #ffffff;
+        object-fit: cover;
+        margin-top: -54px;
+      }
+
+      /* Background Profile */
+      .background-pic {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+        display: block;
+      }
+
+      /* Input and Textarea */
+      input,
+      textarea {
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        outline: none;
+      }
+
+      /* File Upload Inputs */
+      input[type="file"] {
+        width: 90%;
+        border: none;
+        background: white;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      /* Labels */
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+
+      /* Buttons */
+      button {
+        background: linear-gradient(90deg, #1877f2, #004aad);
+        color: white;
+        padding: 12px 18px;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+      }
+
+      button:hover {
+        background: linear-gradient(90deg, #166fe5, #003c8f);
+        transform: scale(1.05);
+      }
+
+      /* Feed */
+      .feed {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      /* Tweets */
+      .tweet {
+        background: #f1f2f6;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        text-align: left;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .tweet:hover {
+        transform: scale(1.02);
+      }
+
+      /* Like Button */
+      .like-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: red;
+        font-size: 18px;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .like-btn:hover {
+        transform: scale(1.2);
+      }
+
+      /* Scrollbar Customization */
+      .feed::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .feed::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .feed::-webkit-scrollbar-thumb {
+        background: #1877f2;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-container">
+      <img
+        id="backgroundImage"
+        class="background-pic"
+        src="your-background.jpg"
+        alt="Background Image"
+      />
+      <img
+        id="profileImage"
+        class="profile-pic"
+        src="your-profile.jpg"
+        alt="Profile Image"
+      />
+      <h2 id="displayName">Your Name</h2>
+      <p><strong>Bio:</strong> <span id="displayBio">Your bio here...</span></p>
+      <p>
+        <strong>Birthday:</strong> <span id="displayBirthday">MM/DD/YYYY</span>
+      </p>
+      <p>
+        <strong>Favorite Quote:</strong>
+        <span id="displayQuote">Your favorite quote...</span>
+      </p>
+    </div>
+
+    <div class="tweet-box">
+      <textarea id="tweetInput" placeholder="What's on your mind?"></textarea>
+      <button onclick="postTweet()">Post</button>
+    </div>
+
+    <div class="feed" id="tweetFeed"></div>
+
+    <script src="script.js"></script>
+
+    <video autoplay muted loop class="video-bg">
+      <source src="zenitsu-swordsmanship.1920x1080.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <script>
+      // Load profile data from localStorage when the page loads
+      window.onload = function () {
+        // Load profile data from localStorage and display it
+        ["name", "birthday", "bio", "quote"].forEach((id) => {
+          const value = localStorage.getItem(id);
+          if (value) {
+            document.getElementById(
+              `display${id.charAt(0).toUpperCase() + id.slice(1)}`
+            ).textContent = value;
+          }
+        });
+
+        // Load profile image if available
+        const profileImage = localStorage.getItem("profileImage");
+        if (profileImage) {
+          document.getElementById("profileImage").src = profileImage;
+        }
+
+        // Load background image if available
+        const backgroundImage = localStorage.getItem("backgroundImage");
+        if (backgroundImage) {
+          document.getElementById("backgroundImage").src = backgroundImage;
+        }
+      };
+
+      // Function to post a tweet
+      function postTweet() {
+        const tweetText = document.getElementById("tweetInput").value.trim();
+        if (tweetText) {
+          let tweetDiv = document.createElement("div");
+          tweetDiv.classList.add("tweet");
+          tweetDiv.innerHTML = `
+            <p>${tweetText}</p>
+            <button class="like-btn" data-liked="false">❤️</button>
+            <span class="like-count">0</span>
+          `;
+          document.getElementById("tweetFeed").appendChild(tweetDiv);
+          document.getElementById("tweetInput").value = ""; // Clear input field after posting
+        }
+      }
+
+      // Toggle like button state when clicked
+      document.addEventListener("click", (event) => {
+        if (event.target.classList.contains("like-btn")) {
+          const btn = event.target;
+          const likeCount = btn.nextElementSibling;
+          const isLiked = btn.dataset.liked === "true";
+          btn.dataset.liked = isLiked ? "false" : "true";
+          likeCount.textContent = isLiked ? "0" : "1"; // Toggle like count between 0 and 1
+        }
+      });
+    </script>
+  </body>
+</html>
