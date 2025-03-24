@@ -46,11 +46,10 @@
       }
     </style>
   </head>
-  <script src="script.js"></script>
   <body>
     <!-- Splash Screen with Opening Video -->
     <div id="splashScreen">
-      <video id="introVideo" autoplay muted>
+      <video id="introVideo" autoplay>
         <source src="Pornhub Intro meme.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -69,7 +68,7 @@
     </div>
 
     <!-- Background Music -->
-    <audio id="bgMusic" autoplay loop muted>
+    <audio id="bgMusic" loop>
       <source
         src="3 O'CLOCK PRAYER - PANALANGIN SA IKA-3 NG HAPON.mp3"
         type="audio/mp3"
@@ -78,25 +77,39 @@
     </audio>
 
     <!-- Background video for user's profile -->
-    <video id="userVideo" autoplay muted loop class="video-bg">
+    <video id="userVideo" autoplay loop class="video-bg">
       <source id="userVideoSource" src="" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
 
     <script>
-      // After splash screen ends, show the main content and set user video
-      document.getElementById("introVideo").onended = function () {
-        // Hide splash screen
-        document.getElementById("splashScreen").style.display = "none";
-        // Show main content
-        document.getElementById("mainContent").style.display = "block";
+      document.addEventListener("DOMContentLoaded", function () {
+        const introVideo = document.getElementById("introVideo");
+        const splashScreen = document.getElementById("splashScreen");
+        const mainContent = document.getElementById("mainContent");
+        const bgMusic = document.getElementById("bgMusic");
 
-        // Set the background video for the user (this can be dynamic based on user selection)
-        const userVideoPath = "path_to_user_specific_video.mp4"; // Replace with the actual path to the user's background video
-        document.getElementById("userVideoSource").src = userVideoPath;
-        document.getElementById("userVideo").load();
-        document.getElementById("userVideo").play(); // Ensure it plays after load
-      };
+        // Play audio and unmute after user interaction
+        document.body.addEventListener("click", function () {
+          introVideo.muted = false;
+          introVideo.play();
+
+          bgMusic.muted = false;
+          bgMusic.play();
+        });
+
+        // Hide splash screen after video ends
+        introVideo.onended = function () {
+          splashScreen.style.display = "none";
+          mainContent.style.display = "block";
+
+          // Set background video for the user
+          const userVideoPath = "path_to_user_specific_video.mp4";
+          document.getElementById("userVideoSource").src = userVideoPath;
+          document.getElementById("userVideo").load();
+          document.getElementById("userVideo").play();
+        };
+      });
 
       // Function to create profile
       function createProfile() {
@@ -106,7 +119,6 @@
         const quote = document.getElementById("quote").value;
 
         if (name && birthday && bio && quote) {
-          // Save profile data to localStorage
           localStorage.setItem("name", name);
           localStorage.setItem("birthday", birthday);
           localStorage.setItem("bio", bio);
@@ -114,14 +126,12 @@
 
           // Handle profile and background pictures
           const profilePic = document.getElementById("profilePic").files[0];
-          const backgroundPic =
-            document.getElementById("backgroundPic").files[0];
+          const backgroundPic = document.getElementById("backgroundPic").files[0];
 
-          // Convert images to Base64 and save them
           if (profilePic) {
             const reader = new FileReader();
             reader.onload = function (e) {
-              localStorage.setItem("profileImage", e.target.result); // Store image as base64
+              localStorage.setItem("profileImage", e.target.result);
             };
             reader.readAsDataURL(profilePic);
           }
@@ -129,22 +139,17 @@
           if (backgroundPic) {
             const reader = new FileReader();
             reader.onload = function (e) {
-              localStorage.setItem("backgroundImage", e.target.result); // Store background image
+              localStorage.setItem("backgroundImage", e.target.result);
             };
             reader.readAsDataURL(backgroundPic);
           }
 
-          // Show success alert and redirect to the feed page
           alert("Profile created successfully!");
-          window.location.href = "feed.html"; // Redirect to feed page
+          window.location.href = "feed.html";
         } else {
           alert("Please fill out all fields!");
         }
       }
-
-      // Ensure background music plays when the splash screen is hidden
-      const bgMusic = document.getElementById("bgMusic");
-      bgMusic.muted = false; // Unmute the background music after splash screen ends
     </script>
   </body>
 </html>
